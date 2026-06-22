@@ -1,19 +1,17 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { C, font, radius } from "../styles/tokens";
-import Navbar from "../components/Navbar";
-import Features from "../components/Features";
-import HowItWorks from "../components/HowItWorks";
-import Footer from "../components/Footer";
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { C, font, radius, size } from '../styles/tokens';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function LandingPage() {
   return (
-    <div style={{ background: C.bg0, minHeight: "100vh", fontFamily: font.body }}>
+    <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: font.body }}>
       <Navbar />
       <Hero />
-      <TrustBar />
-      <Features />
+      <StatsRail />
       <HowItWorks />
+      <Models />
       <Footer />
     </div>
   );
@@ -21,312 +19,483 @@ export default function LandingPage() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
-  const [url, setUrl] = useState("");
-
   return (
     <section style={{
-      minHeight: "100vh",
-      display: "flex", alignItems: "center",
-      paddingTop: 60,
-      background: `
-        radial-gradient(ellipse 65% 55% at 50% -5%, rgba(0,212,255,0.11) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 40% at 85% 30%, rgba(108,71,255,0.09) 0%, transparent 60%),
-        ${C.bg0}
-      `,
-      position: "relative", overflow: "hidden",
+      minHeight: '100vh',
+      paddingTop: size.navH,
+      display: 'flex', alignItems: 'center',
+      borderBottom: `1px solid ${C.rule}`,
     }}>
-
-      {/* Grid texture */}
       <div style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: `
-          linear-gradient(${C.cyan}08 1px, transparent 1px),
-          linear-gradient(90deg, ${C.cyan}08 1px, transparent 1px)
-        `,
-        backgroundSize: "60px 60px",
-        maskImage: "radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent)",
-      }}/>
-
-      <div style={{
-        maxWidth: 1140, margin: "0 auto", padding: "0 24px",
-        position: "relative", zIndex: 1,
-        display: "grid", gridTemplateColumns: "1fr 1fr",
-        gap: 80, alignItems: "center",
+        maxWidth: size.maxW, margin: '0 auto',
+        padding: '60px 24px',
+        display: 'grid', gridTemplateColumns: '1fr 1fr',
+        gap: 80, alignItems: 'center',
       }}>
-        {/* Left — Copy */}
+        {/* Left */}
         <div>
-          {/* Eyebrow */}
           <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "5px 12px", borderRadius: radius.sm,
-            background: "rgba(0,212,255,0.08)",
-            border: `1px solid ${C.border}`,
-            marginBottom: 24,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            marginBottom: 32,
           }}>
-            <span style={{
-              width: 6, height: 6, borderRadius: 3,
-              background: C.cyan, display: "block",
-              animation: "pulse 1.8s ease-in-out infinite",
+            <div style={{
+              width: 6, height: 6, borderRadius: '50%',
+              background: C.red,
+              animation: 'blink 1.6s step-end infinite',
             }}/>
             <span style={{
-              fontFamily: font.mono, fontSize: 11,
-              color: C.cyan, letterSpacing: "0.1em",
-              textTransform: "uppercase", fontWeight: 600,
+              fontFamily: font.mono, fontSize: 11, color: C.inkMid,
+              letterSpacing: '0.1em', textTransform: 'uppercase',
             }}>
-              AI Deepfake Detector · v2.1
+              Ensemble v2.1 — Live
             </span>
+            <style>{`@keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }`}</style>
           </div>
 
-          {/* Headline */}
           <h1 style={{
-            fontFamily: font.heading,
-            fontSize: "clamp(36px, 5vw, 60px)",
-            fontWeight: 800, lineHeight: 1.08,
-            color: C.white, margin: "0 0 20px",
-            letterSpacing: "-0.035em",
+            fontFamily: font.display,
+            fontSize: 'clamp(40px,5.5vw,72px)',
+            fontWeight: 700, color: C.ink,
+            lineHeight: 1.0, letterSpacing: '-0.04em',
+            margin: '0 0 8px',
           }}>
-            Is this image{" "}
-            <span style={{
-              color: C.cyan,
-              textDecoration: "underline",
-              textDecorationColor: C.cyan + "50",
-              textUnderlineOffset: 6,
-              textDecorationThickness: 2,
-            }}>real?</span>
-            <br />
-            Find out in 3s.
+            DETECT.<br />
+            <span style={{ color: C.red }}>VERIFY.</span><br />
+            TRUST.
           </h1>
 
-          <p style={{
-            fontSize: 17, color: C.muted, lineHeight: 1.7,
-            margin: "0 0 36px", maxWidth: 440,
-          }}>
-            DeepSight runs your image through Xception + EfficientNet-B4
-            — two models trained on FaceForensics++ — and fuses their outputs
-            into one verdict you can trust.
-          </p>
-
-          {/* URL Input */}
           <div style={{
-            display: "flex", alignItems: "stretch",
-            border: `1px solid ${C.border}`,
-            borderRadius: radius.md,
-            background: C.bg2, overflow: "hidden",
-            marginBottom: 14, transition: "border-color 0.2s",
-          }}
-          onFocusCapture={e => e.currentTarget.style.borderColor = C.cyan + "50"}
-          onBlurCapture={e => e.currentTarget.style.borderColor = C.border}
-          >
-            <span style={{
-              padding: "0 14px", display: "flex", alignItems: "center",
-              color: C.muted, fontSize: 15, borderRight: `1px solid ${C.faint}`,
-            }}>https://</span>
-            <input
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-              placeholder="paste image URL…"
-              style={{
-                flex: 1, background: "transparent", border: "none",
-                outline: "none", color: C.white, fontSize: 14,
-                padding: "13px 14px", fontFamily: font.mono,
-              }}
-            />
-            <Link to="/analyze" style={{
-              padding: "0 22px", background: C.cyan,
-              color: C.bg0, fontSize: 13, fontWeight: 700,
-              textDecoration: "none", display: "flex", alignItems: "center",
-              letterSpacing: "0.02em", transition: "background 0.15s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = C.cyanDim}
-            onMouseLeave={e => e.currentTarget.style.background = C.cyan}
-            >
-              Analyze →
-            </Link>
-          </div>
+            width: 48, height: 2, background: C.rule, margin: '28px 0',
+          }}/>
 
-          <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: font.mono }}>
-            or{" "}
-            <Link to="/analyze" style={{ color: C.cyan, textDecoration: "none" }}>
-              open the uploader
-            </Link>
-            {" "}to drag & drop a file · No signup needed for 5 free analyses
+          <p style={{
+            fontSize: 16, color: C.inkMid, lineHeight: 1.7,
+            margin: '0 0 40px', maxWidth: 400,
+            fontFamily: font.body,
+          }}>
+            Two AI models — Xception and EfficientNet-B4 — trained on
+            FaceForensics++ and fused into one verdict. Drop an image.
+            Know the truth in under 3 seconds.
           </p>
 
-          {/* CTA row */}
-          <div style={{ display: "flex", gap: 12, marginTop: 28 }}>
-            <Link to="/signup" style={{
-              padding: "12px 26px", borderRadius: radius.sm,
-              background: C.cyan, color: C.bg0, fontWeight: 700,
-              fontSize: 14, textDecoration: "none",
-              transition: "opacity 0.15s", letterSpacing: "0.01em",
+          <div style={{ display: 'flex', gap: 12 }}>
+            <Link to="/analyze" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '12px 24px', borderRadius: radius.sm,
+              background: C.ink, color: C.white,
+              fontFamily: font.mono, fontSize: 12,
+              fontWeight: 700, textDecoration: 'none',
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              border: `1px solid ${C.ink}`,
+              transition: 'background 0.15s, border-color 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-            onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-            >
-              Create free account
+            onMouseEnter={e => { e.currentTarget.style.background = C.red; e.currentTarget.style.borderColor = C.red; }}
+            onMouseLeave={e => { e.currentTarget.style.background = C.ink; e.currentTarget.style.borderColor = C.ink; }}>
+              Run Analysis
             </Link>
             <a href="#how-it-works" style={{
-              padding: "12px 26px", borderRadius: radius.sm,
-              border: `1px solid ${C.faint}`, color: C.muted,
-              fontSize: 14, textDecoration: "none",
-              transition: "border-color 0.15s, color 0.15s",
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '12px 24px', borderRadius: radius.sm,
+              border: `1px solid ${C.rule}`, color: C.inkMid,
+              fontFamily: font.mono, fontSize: 12,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'border-color 0.15s, color 0.15s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.white; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = C.faint; e.currentTarget.style.color = C.muted; }}
-            >
-              See how it works ↓
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.ink; e.currentTarget.style.color = C.ink; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.rule; e.currentTarget.style.color = C.inkMid; }}>
+              See how →
             </a>
           </div>
         </div>
 
-        {/* Right — Detection card demo */}
-        <DetectionDemo />
+        {/* Right — Annotated forensics card */}
+        <ForensicsCard />
       </div>
-
-      <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }`}</style>
     </section>
   );
 }
 
-function DetectionDemo() {
-  const bars = [
-    { label: "Xception", value: 91.2, color: C.cyan },
-    { label: "EfficientNet-B4", value: 87.6, color: C.purple },
-    { label: "Ensemble", value: 89.4, color: C.cyan },
+// The signature element: a forensics-report style analysis card
+// with annotation callout lines
+function ForensicsCard() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => (t + 1) % 4), 900);
+    return () => clearInterval(id);
+  }, []);
+
+  const annotations = [
+    { x: 38, y: 22, label: 'COMPRESSION\nARTEFACT +0.12', side: 'left' },
+    { x: 68, y: 35, label: 'GAN BLEND\nCOEFF 0.91', side: 'right' },
+    { x: 50, y: 65, label: 'FREQ DIST\n∆σ 2.4', side: 'right' },
+    { x: 24, y: 55, label: 'EYE BLINK\nCYCLE ERR', side: 'left' },
+  ];
+
+  const scores = [
+    { model: 'Xception',       score: 0.912, active: tick >= 0 },
+    { model: 'EfficientNet-B4', score: 0.876, active: tick >= 1 },
+    { model: 'Ensemble fusion', score: 0.894, active: tick >= 2 },
   ];
 
   return (
     <div style={{
-      background: C.bg2,
-      border: `1px solid ${C.faint}`,
+      border: `1px solid ${C.rule}`,
       borderRadius: radius.lg,
-      overflow: "hidden",
+      background: C.bg0,
+      overflow: 'hidden',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
     }}>
-      {/* Card header */}
+      {/* Header bar */}
       <div style={{
-        display: "flex", alignItems: "center", gap: 8,
-        padding: "12px 18px",
-        borderBottom: `1px solid ${C.faint}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '10px 16px',
+        borderBottom: `1px solid ${C.rule}`,
+        background: C.bg1,
       }}>
-        {["#e8394a","#f59e0b","#22c55e"].map(c => (
-          <div key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c }}/>
-        ))}
-        <span style={{
-          fontFamily: font.mono, fontSize: 11, color: C.muted,
-          marginLeft: 8, letterSpacing: "0.06em",
-        }}>deepsight — analysis result</span>
-      </div>
-
-      {/* Image placeholder */}
-      <div style={{
-        background: C.bg3, margin: 18, borderRadius: radius.sm,
-        height: 140, display: "flex", alignItems: "center",
-        justifyContent: "center", flexDirection: "column", gap: 6,
-        border: `1px solid ${C.faint}`,
-      }}>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <circle cx="16" cy="14" r="6" stroke={C.muted} strokeWidth="1.5"/>
-          <circle cx="16" cy="14" r="2.5" fill={C.muted}/>
-          <path d="M8 28c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke={C.muted} strokeWidth="1.5" strokeLinecap="round"/>
-        </svg>
-        <span style={{ fontFamily: font.mono, fontSize: 11, color: C.muted, letterSpacing: "0.06em" }}>
-          profile_photo.jpg
+        <span style={{ fontFamily: font.mono, fontSize: 10, color: C.inkLow, letterSpacing: '0.08em' }}>
+          FORENSIC REPORT #4A2F
+        </span>
+        <span style={{ fontFamily: font.mono, fontSize: 10, color: C.red, letterSpacing: '0.08em' }}>
+          ● PROCESSING
         </span>
       </div>
 
-      {/* Confidence bars */}
-      <div style={{ padding: "0 18px 18px", display: "flex", flexDirection: "column", gap: 12 }}>
-        {bars.map(b => (
-          <div key={b.label}>
+      {/* Annotated image area */}
+      <div style={{
+        position: 'relative', background: C.bg2,
+        height: 240, overflow: 'hidden',
+      }}>
+        {/* Face placeholder — grid overlay */}
+        <svg
+          width="100%" height="100%"
+          viewBox="0 0 100 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', inset: 0, opacity: 0.15 }}
+        >
+          {/* Grid */}
+          {[10,20,30,40,50,60,70,80,90].map(v => (
+            <line key={`h${v}`} x1="0" y1={v} x2="100" y2={v} stroke={C.inkMid} strokeWidth="0.3"/>
+          ))}
+          {[10,20,30,40,50,60,70,80,90].map(v => (
+            <line key={`v${v}`} x1={v} y1="0" x2={v} y2="100" stroke={C.inkMid} strokeWidth="0.3"/>
+          ))}
+        </svg>
+
+        {/* Face oval placeholder */}
+        <svg width="100%" height="100%" viewBox="0 0 300 240" preserveAspectRatio="xMidYMid meet" style={{ position: 'absolute', inset: 0 }}>
+          {/* Face oval */}
+          <ellipse cx="150" cy="115" rx="55" ry="68" stroke={C.inkMid} strokeWidth="1" fill="none" strokeDasharray="4 3"/>
+          {/* Eyes */}
+          <ellipse cx="132" cy="98" rx="10" ry="7" stroke={C.inkMid} strokeWidth="1" fill="none"/>
+          <ellipse cx="168" cy="98" rx="10" ry="7" stroke={C.inkMid} strokeWidth="1" fill="none"/>
+          {/* Nose */}
+          <path d="M150 105 L143 125 L157 125" stroke={C.inkMid} strokeWidth="1" fill="none" strokeLinejoin="round"/>
+          {/* Mouth */}
+          <path d="M136 138 Q150 148 164 138" stroke={C.inkMid} strokeWidth="1" fill="none"/>
+
+          {/* Annotation callouts */}
+          {annotations.map((ann, i) => {
+            const px = (ann.x / 100) * 300;
+            const py = (ann.y / 100) * 240;
+            const lineLen = 45;
+            const x2 = ann.side === 'left' ? px - lineLen : px + lineLen;
+            const isVisible = i <= tick;
+
+            return (
+              <g key={i} style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.3s' }}>
+                {/* Dot */}
+                <circle cx={px} cy={py} r="2.5" fill={C.red} opacity="0.8"/>
+                {/* Line */}
+                <line x1={px} y1={py} x2={x2} y2={py} stroke={C.red} strokeWidth="0.6" opacity="0.7"/>
+                {/* Tick */}
+                <line x1={x2} y1={py - 8} x2={x2} y2={py + 8} stroke={C.red} strokeWidth="0.6" opacity="0.7"/>
+                {/* Label */}
+                {ann.label.split('\n').map((line, li) => (
+                  <text
+                    key={li}
+                    x={ann.side === 'left' ? x2 - 3 : x2 + 3}
+                    y={py - 4 + li * 9}
+                    textAnchor={ann.side === 'left' ? 'end' : 'start'}
+                    fontSize="6" fill={C.red}
+                    fontFamily="'Space Mono', monospace"
+                    opacity="0.85"
+                  >{line}</text>
+                ))}
+              </g>
+            );
+          })}
+
+          {/* Scanning line */}
+          <line
+            x1="95" y1={40 + (tick * 40)} x2="205" y2={40 + (tick * 40)}
+            stroke={C.red} strokeWidth="0.5" opacity="0.4"
+            strokeDasharray="3 3"
+          />
+        </svg>
+      </div>
+
+      {/* Scores */}
+      <div style={{ padding: '16px 18px' }}>
+        {scores.map((s, i) => (
+          <div key={i} style={{ marginBottom: i < scores.length - 1 ? 10 : 0 }}>
             <div style={{
-              display: "flex", justifyContent: "space-between",
-              marginBottom: 5,
+              display: 'flex', justifyContent: 'space-between',
+              marginBottom: 5, alignItems: 'center',
             }}>
-              <span style={{ fontFamily: font.mono, fontSize: 11, color: C.muted }}>{b.label}</span>
-              <span style={{ fontFamily: font.mono, fontSize: 11, color: b.color, fontWeight: 700 }}>
-                {b.value.toFixed(1)}%
+              <span style={{ fontFamily: font.mono, fontSize: 10, color: C.inkMid, letterSpacing: '0.04em' }}>
+                {s.model.toUpperCase()}
+              </span>
+              <span style={{
+                fontFamily: font.mono, fontSize: 11, fontWeight: 700,
+                color: s.active ? C.red : C.inkLow,
+                transition: 'color 0.3s',
+              }}>
+                {s.active ? `${(s.score * 100).toFixed(1)}% FAKE` : '—'}
               </span>
             </div>
-            <div style={{ height: 5, background: C.bg3, borderRadius: 3, overflow: "hidden" }}>
+            <div style={{ height: 2, background: C.ruleDim, borderRadius: 1, overflow: 'hidden' }}>
               <div style={{
-                width: `${b.value}%`, height: "100%",
-                background: b.color, borderRadius: 3,
-                opacity: 0.85,
+                width: s.active ? `${s.score * 100}%` : '0%',
+                height: '100%', background: C.red, borderRadius: 1,
+                transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)',
               }}/>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Verdict banner */}
+      {/* Verdict footer */}
       <div style={{
-        margin: "0 18px 18px",
-        padding: "12px 16px",
-        background: "rgba(232,57,74,0.12)",
-        border: `1px solid rgba(232,57,74,0.3)`,
+        margin: '0 18px 18px',
+        padding: '10px 14px',
+        background: C.redDim,
+        border: `1px solid ${C.red}40`,
         borderRadius: radius.sm,
-        display: "flex", alignItems: "center", gap: 10,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8 1L15 14H1L8 1z" stroke="#e8394a" strokeWidth="1.4" strokeLinejoin="round"/>
-          <path d="M8 6v4M8 11.5v.5" stroke="#e8394a" strokeWidth="1.4" strokeLinecap="round"/>
-        </svg>
-        <div>
-          <span style={{
-            fontFamily: font.mono, fontSize: 12,
-            color: "#e8394a", fontWeight: 700, letterSpacing: "0.08em",
-          }}>FAKE DETECTED</span>
-          <span style={{
-            fontFamily: font.mono, fontSize: 11, color: C.muted,
-            marginLeft: 10,
-          }}>confidence 89.4%</span>
-        </div>
-      </div>
-
-      {/* Analysis time */}
-      <div style={{
-        padding: "10px 18px", borderTop: `1px solid ${C.faint}`,
-        display: "flex", justifyContent: "space-between",
-      }}>
-        <span style={{ fontFamily: font.mono, fontSize: 10, color: C.muted }}>analysis_ms</span>
-        <span style={{ fontFamily: font.mono, fontSize: 10, color: C.cyan }}>2,147</span>
+        <span style={{
+          fontFamily: font.mono, fontSize: 12, fontWeight: 700,
+          color: C.red, letterSpacing: '0.1em',
+        }}>⊘ DEEPFAKE DETECTED</span>
+        <span style={{
+          fontFamily: font.mono, fontSize: 10,
+          color: C.inkMid, letterSpacing: '0.06em',
+        }}>2,147 ms</span>
       </div>
     </div>
   );
 }
 
-// ─── Trust Bar ────────────────────────────────────────────────────────────────
-function TrustBar() {
-  const items = [
-    { v: "98.7%", l: "Detection accuracy" },
-    { v: "<3s",   l: "Per-image analysis" },
-    { v: "2",     l: "AI models fused" },
-    { v: "0",     l: "Data retained" },
+// ─── Stats Rail ───────────────────────────────────────────────────────────────
+function StatsRail() {
+  const stats = [
+    { val: '98.7%', label: 'Detection accuracy' },
+    { val: '<3s',   label: 'Per-image analysis' },
+    { val: '2',     label: 'Ensemble models' },
+    { val: '0 KB',  label: 'Data retained' },
   ];
+
   return (
     <div style={{
-      borderTop: `1px solid ${C.faint}`,
-      borderBottom: `1px solid ${C.faint}`,
-      background: C.bg1,
+      borderBottom: `1px solid ${C.rule}`,
+      background: C.bg0,
     }}>
       <div style={{
-        maxWidth: 1140, margin: "0 auto", padding: "0 24px",
-        display: "grid", gridTemplateColumns: "repeat(4,1fr)",
+        maxWidth: size.maxW, margin: '0 auto', padding: '0 24px',
+        display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
       }}>
-        {items.map(({ v, l }, i) => (
+        {stats.map(({ val, label }, i) => (
           <div key={i} style={{
-            padding: "28px 0",
-            borderRight: i < items.length - 1 ? `1px solid ${C.faint}` : "none",
+            padding: '32px 0',
+            borderRight: i < stats.length - 1 ? `1px solid ${C.rule}` : 'none',
             paddingLeft: i > 0 ? 40 : 0,
           }}>
             <div style={{
-              fontFamily: font.heading, fontSize: 32, fontWeight: 800,
-              color: C.cyan, letterSpacing: "-0.03em", lineHeight: 1,
-            }}>{v}</div>
-            <div style={{ fontSize: 13, color: C.muted, marginTop: 4, fontFamily: font.body }}>{l}</div>
+              fontFamily: font.display, fontSize: 36, fontWeight: 700,
+              color: C.ink, letterSpacing: '-0.03em', lineHeight: 1,
+              marginBottom: 6,
+            }}>{val}</div>
+            <div style={{
+              fontFamily: font.mono, fontSize: 11, color: C.inkLow,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+            }}>{label}</div>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+// ─── How It Works ─────────────────────────────────────────────────────────────
+function HowItWorks() {
+  const steps = [
+    {
+      n: '01',
+      title: 'Upload',
+      body: 'Drop a JPG, PNG, or MP4. Files are processed in-memory and never written to disk. Nothing leaves the analysis pipeline.',
+    },
+    {
+      n: '02',
+      title: 'Dual-model inference',
+      body: 'Xception and EfficientNet-B4 each independently score the image across spatial and frequency domains.',
+    },
+    {
+      n: '03',
+      title: 'Ensemble fusion',
+      body: 'A weighted average of both model scores produces a single confidence value. High confidence → definitive verdict.',
+    },
+    {
+      n: '04',
+      title: 'Heatmap',
+      body: 'GradCAM++ localises the manipulated regions, highlighting exactly which pixels triggered the detection.',
+    },
+  ];
+
+  return (
+    <section id="how-it-works" style={{
+      borderBottom: `1px solid ${C.rule}`,
+      padding: '80px 0',
+    }}>
+      <div style={{ maxWidth: size.maxW, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ marginBottom: 56 }}>
+          <span style={{
+            fontFamily: font.mono, fontSize: 11, color: C.inkLow,
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+          }}>Process</span>
+          <h2 style={{
+            fontFamily: font.display, fontSize: 'clamp(28px,4vw,44px)',
+            fontWeight: 700, color: C.ink, marginTop: 12,
+            letterSpacing: '-0.03em',
+          }}>How detection works</h2>
+        </div>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(4,1fr)',
+          gap: 0,
+          borderTop: `1px solid ${C.rule}`,
+        }}>
+          {steps.map((s, i) => (
+            <div key={i} style={{
+              padding: '32px 32px 32px 0',
+              borderRight: i < steps.length - 1 ? `1px solid ${C.rule}` : 'none',
+              paddingLeft: i > 0 ? 32 : 0,
+            }}>
+              <div style={{
+                fontFamily: font.mono, fontSize: 11, color: C.red,
+                letterSpacing: '0.06em', marginBottom: 20,
+              }}>{s.n}</div>
+              <h3 style={{
+                fontFamily: font.display, fontSize: 16, fontWeight: 700,
+                color: C.ink, letterSpacing: '-0.01em', marginBottom: 12,
+              }}>{s.title}</h3>
+              <p style={{
+                fontSize: 13, color: C.inkMid, lineHeight: 1.65,
+              }}>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+function Models() {
+  const models = [
+    {
+      name: 'Xception',
+      tag: 'SPATIAL ANALYSIS',
+      stats: [
+        { k: 'Architecture', v: 'Depthwise separable conv' },
+        { k: 'Input size',   v: '299 × 299 px' },
+        { k: 'Accuracy',     v: '97.9% on FF++' },
+        { k: 'Params',       v: '22.9 M' },
+      ],
+      note: 'Captures spatial inconsistencies introduced by face-swap GAN generators.',
+    },
+    {
+      name: 'EfficientNet-B4',
+      tag: 'FREQUENCY ANALYSIS',
+      stats: [
+        { k: 'Architecture', v: 'Compound scaling' },
+        { k: 'Input size',   v: '380 × 380 px' },
+        { k: 'Accuracy',     v: '96.4% on FF++' },
+        { k: 'Params',       v: '19.3 M' },
+      ],
+      note: 'Detects frequency-domain artefacts from neural texture synthesis.',
+    },
+  ];
+
+  return (
+    <section id="about" style={{
+      borderBottom: `1px solid ${C.rule}`,
+      padding: '80px 0',
+    }}>
+      <div style={{ maxWidth: size.maxW, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ marginBottom: 56 }}>
+          <span style={{
+            fontFamily: font.mono, fontSize: 11, color: C.inkLow,
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+          }}>Architecture</span>
+          <h2 style={{
+            fontFamily: font.display, fontSize: 'clamp(28px,4vw,44px)',
+            fontWeight: 700, color: C.ink, marginTop: 12,
+            letterSpacing: '-0.03em',
+          }}>The models</h2>
+        </div>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24,
+        }}>
+          {models.map((m, i) => (
+            <div key={i} style={{
+              border: `1px solid ${C.rule}`,
+              borderRadius: radius.lg,
+              overflow: 'hidden',
+            }}>
+              <div style={{
+                padding: '14px 20px',
+                borderBottom: `1px solid ${C.rule}`,
+                background: C.bg1,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              }}>
+                <span style={{
+                  fontFamily: font.display, fontSize: 14, fontWeight: 700,
+                  color: C.ink, letterSpacing: '-0.01em',
+                }}>{m.name}</span>
+                <span style={{
+                  fontFamily: font.mono, fontSize: 9, color: C.red,
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  border: `1px solid ${C.red}40`, padding: '2px 6px',
+                  borderRadius: 2,
+                }}>{m.tag}</span>
+              </div>
+
+              <div style={{ padding: '20px' }}>
+                {m.stats.map(({ k, v }) => (
+                  <div key={k} style={{
+                    display: 'flex', justifyContent: 'space-between',
+                    padding: '8px 0',
+                    borderBottom: `1px solid ${C.ruleDim}`,
+                  }}>
+                    <span style={{ fontFamily: font.mono, fontSize: 11, color: C.inkLow, letterSpacing: '0.04em' }}>
+                      {k}
+                    </span>
+                    <span style={{ fontFamily: font.mono, fontSize: 11, color: C.ink, fontWeight: 700 }}>
+                      {v}
+                    </span>
+                  </div>
+                ))}
+                <p style={{
+                  fontSize: 13, color: C.inkMid, lineHeight: 1.6,
+                  marginTop: 16, paddingTop: 16,
+                  borderTop: `1px solid ${C.ruleDim}`,
+                }}>{m.note}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
